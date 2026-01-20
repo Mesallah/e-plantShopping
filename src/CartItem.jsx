@@ -9,27 +9,43 @@ const CartItem = ({ onContinueShopping }) => {
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
- 
+    let total = 0;
+    cart.forEach(item => {
+      const costNum = parseFloat(item.cost.substring(1)); // Convert "$15" -> 15
+      total += costNum * item.quantity;
+    });
+    return total.toFixed(2); // Returns as string with 2 decimal points
   };
 
+  // Continue shopping handler
   const handleContinueShopping = (e) => {
-   
+    e.preventDefault();
+    onContinueShopping(); // Call the parent function to hide cart
   };
 
-
-
+  // Increment item quantity
   const handleIncrement = (item) => {
+    dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
   };
 
+  // Decrement item quantity
   const handleDecrement = (item) => {
-   
+    if (item.quantity > 1) {
+      dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
+    } else {
+      dispatch(removeItem({ name: item.name })); // Remove item if quantity drops to 0
+    }
   };
 
+  // Remove item from cart
   const handleRemove = (item) => {
+    dispatch(removeItem({ name: item.name }));
   };
 
-  // Calculate total cost based on quantity for an item
+  // Calculate total cost for individual item
   const calculateTotalCost = (item) => {
+    const costNum = parseFloat(item.cost.substring(1));
+    return (costNum * item.quantity).toFixed(2);
   };
 
   return (
@@ -55,14 +71,12 @@ const CartItem = ({ onContinueShopping }) => {
       </div>
       <div style={{ marginTop: '20px', color: 'black' }} className='total_cart_amount'></div>
       <div className="continue_shopping_btn">
-        <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
+        <button className="get-started-button" onClick={handleContinueShopping}>Continue Shopping</button>
         <br />
-        <button className="get-started-button1">Checkout</button>
+        <button className="get-started-button1" onClick={() => alert('Functionality to be added for future reference')}>Checkout</button>
       </div>
     </div>
   );
 };
 
 export default CartItem;
-
-
